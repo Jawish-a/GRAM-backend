@@ -2,24 +2,27 @@ from django.shortcuts import render
 from django.contrib.auth.models import User
 
 from .serializers import (
-    SignUpSerializer, ListProductSerializer ,DetaileProductSerializer, 
+    SignUpSerializer,
     AddressListSerializer, AddAddressSerializer, CountrySerializer,
     ProductListSerializer, ProductDetailsSerializer,
     OrderDetailsSerializer, OrderListSerializer
-    )
+)
+
 
 from rest_framework.permissions import IsAuthenticated
 from .permissions import IsOwner
 
-from rest_framework.generics import  (
-    CreateAPIView, ListAPIView ,RetrieveAPIView, DestroyAPIView,
+from rest_framework.generics import (
+    CreateAPIView, ListAPIView, RetrieveAPIView, DestroyAPIView,
     RetrieveUpdateAPIView
-    )
+)
 from .models import Product, Address, Country, Order
 
 """
 Auth Views
 """
+
+
 class SignUp(CreateAPIView):
     serializer_class = SignUpSerializer
 
@@ -73,6 +76,7 @@ class AddAddress(CreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
 
 class DeleteAddress(DestroyAPIView):
     queryset = Address.objects.all()

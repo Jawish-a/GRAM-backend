@@ -1,4 +1,4 @@
-from xCommerce.models import Product ,Image, Address, Country, Order, OrderItem
+from xCommerce.models import Product, Image, Address, Country, Order, OrderItem
 from rest_framework import serializers
 from django.contrib.auth.models import User
 # this is to genrate the token after the user signup
@@ -62,6 +62,7 @@ class SignUpSerializer(serializers.ModelSerializer):
         token = RefreshToken.for_user(new_user)
         validated_data["token"] = token
         return validated_data
+
 
 """
 Order Item Serializer
@@ -132,21 +133,25 @@ class OrderDetailsSerializer(serializers.ModelSerializer):
         items = obj.items.all()
         return items
 
+
 '''
 Address serializers
 '''
+
 
 class CountrySerializer(serializers.ModelSerializer):
     class Meta:
         model = Country
         fields = ['name']
 
+
 class AddressListSerializer(serializers.ModelSerializer):
     country = serializers.SerializerMethodField()
+
     class Meta:
         model = Address
         fields = ['first_name', 'last_name', 'phone', 'city',
-         'address_line_1', 'address_line_2', 'address_type', 'country']
+                  'address_line_1', 'address_line_2', 'address_type', 'country']
         # exclude = ['user']
 
     def get_country(self, obj):
