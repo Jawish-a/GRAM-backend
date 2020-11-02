@@ -21,11 +21,17 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 urlpatterns = [
 
     path('admin/', admin.site.urls),
-    # path('api/'),
+    # path('api/v1'),
     path('api/v1/login/', TokenObtainPairView.as_view(), name='login'),
     path('api/v1/signup/', views.SignUp.as_view(), name='signup'),
 
-    path('api/v1/products/', views.ListProductView.as_view(), name='product-list'),
-    path('api/v1/products/<int:object_id>/', views.DetailView.as_view(), name='product-detail'),
+    path('api/v1/products/', views.ProductListView.as_view(), name='product-list'),
+    path('api/v1/products/<int:object_id>/',
+         views.ProductDetailView.as_view(), name='product-detail'),
+
+    path('api/v1/orders/', views.OrderListView.as_view(), name='order-list'),
+    path('api/v1/orders/<int:object_id>/',
+         views.OrderDetailView.as_view(), name='order-detail'),
+
 
 ]
