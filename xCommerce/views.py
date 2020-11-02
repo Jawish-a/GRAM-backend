@@ -1,29 +1,59 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
+
 from .serializers import (
     SignUpSerializer, ListProductSerializer ,DetaileProductSerializer, 
-    AddressListSerializer, AddAddressSerializer, CountrySerializer
+    AddressListSerializer, AddAddressSerializer, CountrySerializer,
+    ProductListSerializer, ProductDetailsSerializer,
+    OrderDetailsSerializer, OrderListSerializer
     )
+
 from rest_framework.permissions import IsAuthenticated
 from .permissions import IsOwner
+
 from rest_framework.generics import  (
     CreateAPIView, ListAPIView ,RetrieveAPIView, DestroyAPIView,
     RetrieveUpdateAPIView
     )
-from .models import Product, Address, Country
+from .models import Product, Address, Country, Order
 
-
+"""
+Auth Views
+"""
 class SignUp(CreateAPIView):
-	serializer_class = SignUpSerializer
+    serializer_class = SignUpSerializer
 
-class ListProductView(ListAPIView):
+
+"""
+Product Views
+"""
+
+
+class ProductListView(ListAPIView):
     queryset = Product.objects.all()
-    serializer_class = ListProductSerializer
+    serializer_class = ProductListSerializer
 
 
-class DetailView(RetrieveAPIView):
+class ProductDetailView(RetrieveAPIView):
     queryset = Product.objects.all()
-    serializer_class = DetaileProductSerializer
+    serializer_class = ProductDetailsSerializer
+    lookup_field = 'id'
+    lookup_url_kwarg = 'object_id'
+
+
+""" 
+Order Views
+"""
+
+
+class OrderListView(ListAPIView):
+    queryset = Order.objects.all()
+    serializer_class = OrderListSerializer
+
+
+class OrderDetailView(RetrieveAPIView):
+    queryset = Order.objects.all()
+    serializer_class = OrderDetailsSerializer
     lookup_field = 'id'
     lookup_url_kwarg = 'object_id'
 
