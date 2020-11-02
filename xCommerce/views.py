@@ -6,7 +6,7 @@ from .models import Product
 
 
 class SignUp(CreateAPIView):
-	serializer_class = SignUpSerializer
+    serializer_class = SignUpSerializer
 
 class ListProductView(ListAPIView):
     queryset = Product.objects.all()
