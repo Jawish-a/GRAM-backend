@@ -38,8 +38,9 @@ class Address(models.Model):
         User, on_delete=models.CASCADE, related_name='addresses')
     counrty = models.ForeignKey(Country, on_delete=models.CASCADE)
 
+
     def __str__(self):
-        return f'{self.city} {self.address_line_1} - {self.counrty}'
+        return f'{self.city} {self.address_line_1} - {self.country}'
 
 
 '''
