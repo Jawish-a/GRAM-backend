@@ -28,4 +28,13 @@ urlpatterns = [
     path('list/', views.ListProductView.as_view(), name='list'),
     path('detail/<int:object_id>/', views.DetailView.as_view(), name='detail'),
 
+    path('address/list/', views.AddressList.as_view(), name='address-list'),
+    path('address/add/', views.AddAddress.as_view(), name='address-add'),
+    path('address/<int:address_id>/update/', views.UpdateAddress.as_view(), name='address-update'),
+    path('address/<int:address_id>/delete/', views.DeleteAddress.as_view(), name='address-delete'),
+
+    path('country/list/', views.CountryList.as_view(), name='country-list'),
+
+    # path('country/list/', views.CountryList.as_view(), name='country-list'),
+
 ]

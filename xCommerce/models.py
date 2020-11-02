@@ -34,10 +34,10 @@ class Address(models.Model):
     address_line_2 = models.CharField(max_length=191, blank=True, null=True)
     address_type = models.CharField(max_length=60)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='addresses')
-    counrty = models.ForeignKey(Country, on_delete=models.CASCADE)
+    country = models.ForeignKey(Country, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.city} {self.address_line_1} - {self.counrty}'
+        return f'{self.city} {self.address_line_1} - {self.country}'
 
 
 '''
