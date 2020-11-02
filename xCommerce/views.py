@@ -4,7 +4,7 @@ from .serializers import SignUpSerializer, ListProductSerializer ,DetaileProduct
 from rest_framework.generics import  CreateAPIView, ListAPIView ,RetrieveAPIView
 from .models import Product
 
-# Create your views here.
+
 class SignUp(CreateAPIView):
 	serializer_class = SignUpSerializer
 

@@ -2,39 +2,28 @@ from xCommerce.models import Product ,Image
 from rest_framework import serializers
 from django.contrib.auth.models import User
 
+
 class ListProductSerializer(serializers.ModelSerializer):
-    images=serializers.SerializerMethodField()
+    image = serializers.SerializerMethodField()
+    
     class Meta:
         model = Product
-        #fields = '__all__'
-        fields = ['name','price' ,'images']
-    def get_images(self, obj):
-      images = Image.objects.filter(product=obj.id)
-      return ImageSerializer(images, many=True).data
+        fields = ['name','price' ,'image']
+    
+    def get_image(self, obj):
+      image = obj.images.filter(is_featured=True).first().url
+      return image
 
 
 class DetaileProductSerializer(serializers.ModelSerializer):
-    images=serializers.SerializerMethodField()
+    images = serializers.SlugRelatedField(
+        many=True,
+        read_only=True,
+        slug_field='url'
+    )
     class Meta:
         model = Product
         fields = ['name','price' ,'images' ,'description' , 'stock']
-
-    def get_images(self, obj):
-      images = Image.objects.filter(product=obj.id)
-      return ImageSerializer(images, many=True).data
-#    fields = ['name']
-
-class ImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Image
-        fields = '__all__'
-
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['username']
-
 
 
 class SignUpSerializer(serializers.ModelSerializer):
