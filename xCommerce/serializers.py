@@ -1,4 +1,4 @@
-from xCommerce.models import Product ,Image
+from xCommerce.models import Product ,Image, Address, Country
 from rest_framework import serializers
 from django.contrib.auth.models import User
 
@@ -41,3 +41,29 @@ class SignUpSerializer(serializers.ModelSerializer):
         new_user.set_password(password)
         new_user.save()
         return validated_data
+
+
+class AddressListSerializer(serializers.ModelSerializer):
+    country = serializers.SerializerMethodField()
+    class Meta:
+        model = Address
+        fields = ['first_name', 'last_name', 'phone', 'city',
+         'address_line_1', 'address_line_2', 'address_type', 'country']
+        # exclude = ['user']
+
+    def get_country(self, obj):
+        return obj.country.name
+
+
+class AddAddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Address
+        exclude = ['user']
+
+
+class CountrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Country
+        fields = ['name']
+
+
