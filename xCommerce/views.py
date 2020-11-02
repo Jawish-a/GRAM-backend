@@ -18,9 +18,3 @@ class DetailView(RetrieveAPIView):
     serializer_class = DetaileProductSerializer
     lookup_field = 'id'
     lookup_url_kwarg = 'object_id'
-
-
-class Checkout(APIView):
-    def post(self, request, *args, **kwargs):
-        data = request.data
-        pass
