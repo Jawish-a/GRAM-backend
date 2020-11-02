@@ -4,7 +4,7 @@ from .serializers import SignUpSerializer, ListProductSerializer ,DetaileProduct
 from rest_framework.generics import  CreateAPIView, ListAPIView ,RetrieveAPIView
 from .models import Product
 
-# Create your views here.
+
 class SignUp(CreateAPIView):
 	serializer_class = SignUpSerializer
 
@@ -18,3 +18,9 @@ class DetailView(RetrieveAPIView):
     serializer_class = DetaileProductSerializer
     lookup_field = 'id'
     lookup_url_kwarg = 'object_id'
+
+
+class Checkout(APIView):
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        pass
