@@ -11,7 +11,6 @@ import uuid
 Models for Address
 '''
 
-
 class Country(models.Model):
     name = models.CharField(max_length=191)
 
@@ -47,7 +46,6 @@ class Address(models.Model):
 Models for Product
 '''
 
-
 class Product(models.Model):
     name = models.CharField(max_length=191)
     description = models.TextField()
@@ -56,7 +54,11 @@ class Product(models.Model):
     stock = models.PositiveIntegerField()
 
     def __str__(self):
-        return f'{self.name}'
+        return self.name
+    
+    def get_featured_image(self):
+        image = self.images.filter(is_featured=True).first().url
+        return image
 
 
 class Image(models.Model):
@@ -66,13 +68,12 @@ class Image(models.Model):
     is_featured = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'{self.url}'
+        return self.url
 
 
 '''
 Models for Order
 '''
-
 
 class Order(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4)
@@ -100,6 +101,9 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f'{self.order} {self.product}'
+
+    def get_featured_image(self):
+        pass
 
 
 @receiver(pre_save, sender=OrderItem)
