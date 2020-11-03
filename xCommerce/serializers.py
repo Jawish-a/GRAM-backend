@@ -138,7 +138,6 @@ class OrderDetailsSerializer(serializers.ModelSerializer):
 Address serializers
 '''
 
-
 class CountrySerializer(serializers.ModelSerializer):
     class Meta:
         model = Country

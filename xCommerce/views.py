@@ -22,7 +22,6 @@ from .models import Product, Address, Country, Order
 Auth Views
 """
 
-
 class SignUp(CreateAPIView):
     serializer_class = SignUpSerializer
 
@@ -30,7 +29,6 @@ class SignUp(CreateAPIView):
 """
 Product Views
 """
-
 
 class ProductListView(ListAPIView):
     queryset = Product.objects.all()
@@ -48,18 +46,28 @@ class ProductDetailView(RetrieveAPIView):
 Order Views
 """
 
-
 class OrderListView(ListAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderListSerializer
+    permission_classes = [IsAuthenticated]
 
 
 class OrderDetailView(RetrieveAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderDetailsSerializer
+    permission_classes = [IsAuthenticated]
     lookup_field = 'id'
     lookup_url_kwarg = 'object_id'
 
+
+
+""" 
+Address Views
+"""
+
+class CountryList(ListAPIView):
+    queryset = Country.objects.all()
+    serializer_class = CountrySerializer
 
 class AddressList(ListAPIView):
     serializer_class = AddressListSerializer
@@ -92,8 +100,3 @@ class UpdateAddress(RetrieveUpdateAPIView):
     lookup_url_kwarg = 'address_id'
     permission_classes = [IsAuthenticated, IsOwner]
 
-
-class CountryList(ListAPIView):
-    queryset = Country.objects.all()
-    serializer_class = CountrySerializer
-    permission_classes = [IsAuthenticated]
