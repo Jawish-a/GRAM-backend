@@ -135,6 +135,44 @@ class OrderDetailsSerializer(serializers.ModelSerializer):
 
 
 '''
+checkout serializers
+'''
+
+
+class OrderItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderItem
+        fields = ['product', 'qty']
+
+
+class OrderCheckoutSerializer(serializers.ModelSerializer):
+    items = OrderItemSerializer(many=True)
+    class Meta:
+        model = Order
+        fields = ['id', 'total', 'tax', 'address', 'items']
+    
+    def create(self, validated_data):
+            total = validated_data['total']
+            tax = validated_data['tax']
+            address = validated_data['address']
+            request = self.context.get("request")
+            new_order = Order( total=total, tax=tax, address=address, user=request.user )
+            new_order.save()
+            
+            items = validated_data['items']
+            for item in items:
+                product = item['product']
+                qty = item['qty']
+                # subtotal = 50
+                # subtotal = item['subtotal']
+                subtotal = float(product.price * qty)
+                new_item = OrderItem(order=new_order, subtotal=subtotal, qty=qty, product=product )
+                new_item.save()
+            
+            return validated_data
+
+
+'''
 Address serializers
 '''
 
