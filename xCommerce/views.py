@@ -42,18 +42,18 @@ Order Views
 """
 
 class OrderListView(ListAPIView):
-    queryset = Order.objects.all()
     serializer_class = OrderListSerializer
     permission_classes = [IsAuthenticated]
 
-    # get orders for logged in user only
-    # get_queryset
+    def get_queryset(self):
+        user = self.request.user
+        return user.orders.all()
 
 
 class OrderDetailView(RetrieveAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderDetailsSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwner]
     lookup_field = 'id'
     lookup_url_kwarg = 'object_id'
 
