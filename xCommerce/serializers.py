@@ -22,7 +22,7 @@ class ProductListSerializer(serializers.ModelSerializer):
         fields = ['name', 'price', 'image', 'images', 'id','description' , 'stock']
 
     def get_image(self, obj):
-        image = obj.images.filter(is_featured=True).first().url
+        image = obj.get_featured_image()
         return image
 
 
@@ -70,7 +70,7 @@ class OrderItemListSerializer(serializers.ModelSerializer):
         return obj.product.name
 
     def get_featured_image(self, obj):
-        return obj.product.images.filter(is_featured=True).first().url
+        return obj.product.get_featured_image()
 
 
 class OrderItemDetailSerializer(serializers.ModelSerializer):
@@ -94,8 +94,7 @@ class OrderItemDetailSerializer(serializers.ModelSerializer):
         return (obj.product.price)
 
     def get_featured_image(self, obj):
-        # Use model method
-        return obj.product.images.filter(is_featured=True).first().url
+        return obj.product.get_featured_image()
 
 
 '''
