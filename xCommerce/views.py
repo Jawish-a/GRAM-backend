@@ -5,7 +5,8 @@ from .serializers import (
     SignUpSerializer,
     AddressListSerializer, AddAddressSerializer, CountrySerializer,
     ProductListSerializer, ProductDetailsSerializer,
-    OrderDetailsSerializer, OrderListSerializer
+    OrderDetailsSerializer, OrderListSerializer,
+    OrderCheckoutSerializer
 )
 
 
@@ -58,6 +59,10 @@ class OrderDetailView(RetrieveAPIView):
     permission_classes = [IsAuthenticated]
     lookup_field = 'id'
     lookup_url_kwarg = 'object_id'
+
+
+class OrderCheckout(CreateAPIView):
+    serializer_class = OrderCheckoutSerializer
 
 
 
