@@ -9,22 +9,23 @@ from rest_framework_simplejwt.tokens import RefreshToken
 Product serializers
 '''
 
+
 class ProductListSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
     images = serializers.SlugRelatedField(
         many=True,
         read_only=True,
         slug_field='url'
-        )
+    )
 
     class Meta:
         model = Product
-        fields = ['name', 'price', 'image', 'images', 'id','description' , 'stock']
+        fields = ['id', 'name', 'price', 'image',
+                  'images', 'id', 'description', 'stock']
 
     def get_image(self, obj):
         image = obj.get_featured_image()
         return image
-
 
 
 '''
@@ -65,8 +66,8 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OrderItem
-        fields = ['product_id', 'name', 'featured_image', 'is_available',
-        'price', 'qty', 'line_item_total']
+        fields = ['id', 'product_id', 'name', 'featured_image', 'is_available',
+                  'price', 'qty', 'line_item_total']
 
     def get_name(self, obj):
         return obj.product.name
@@ -91,7 +92,8 @@ class OrderListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ['uuid', 'total', 'created_date', 'tax', 'address', 'items']
+        fields = ['id', 'uuid', 'total',
+                  'created_date', 'tax', 'address', 'items']
 
 
 class OrderDetailsSerializer(serializers.ModelSerializer):
@@ -99,7 +101,8 @@ class OrderDetailsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ['uuid', 'total', 'created_date', 'tax', 'address', 'items']
+        fields = ['id', 'uuid', 'total',
+                  'created_date', 'tax', 'address', 'items']
 
     def get_items(self, obj):
         items = obj.items.all()
@@ -114,15 +117,16 @@ checkout serializers
 class OrderItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderItem
-        fields = ['product', 'qty']
+        fields = ['id', 'product', 'qty']
 
 
 class OrderCheckoutSerializer(serializers.ModelSerializer):
     items = OrderItemSerializer(many=True)
+
     class Meta:
         model = Order
         fields = ['id', 'total', 'tax', 'address', 'items']
-    
+
     def create(self, validated_data):
         items = validated_data['items']
         # Check for out of stock items
@@ -136,22 +140,24 @@ class OrderCheckoutSerializer(serializers.ModelSerializer):
         tax = validated_data['tax']
         address = validated_data['address']
         request = self.context.get("request")
-        new_order = Order( total=total, tax=tax, address=address, user=request.user )
+        new_order = Order(total=total, tax=tax,
+                          address=address, user=request.user)
         new_order.save()
-        
+
         for item in items:
             product = item['product']
             qty = item['qty']
             if (product.stock - qty) >= 0:
-                new_item = OrderItem(order=new_order, qty=qty, product=product )
+                new_item = OrderItem(order=new_order, qty=qty, product=product)
                 new_item.save()
-            
-        return validated_data  
+
+        return validated_data
 
 
 '''
 Address serializers
 '''
+
 
 class CountrySerializer(serializers.ModelSerializer):
     class Meta:
@@ -164,7 +170,7 @@ class AddressListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Address
-        fields = ['first_name', 'last_name', 'phone', 'city',
+        fields = ['di', 'first_name', 'last_name', 'phone', 'city',
                   'address_line_1', 'address_line_2', 'address_type', 'country']
         # exclude = ['user']
 
