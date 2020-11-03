@@ -14,7 +14,7 @@ class ProductListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ['name', 'price', 'image']
+        fields = ['id','name', 'price', 'image']
 
     def get_image(self, obj):
         image = obj.images.filter(is_featured=True).first().url
