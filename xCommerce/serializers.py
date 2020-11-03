@@ -15,7 +15,7 @@ class ProductListSerializer(serializers.ModelSerializer):
         many=True,
         read_only=True,
         slug_field='url'
-        )
+    )
 
     class Meta:
         model = Product
@@ -155,7 +155,7 @@ class OrderCheckoutSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ['id', 'total', 'tax', 'address', 'items']
-    
+
     def create(self, validated_data):
         items = validated_data['items']
         # Check for out of stock items
@@ -171,15 +171,15 @@ class OrderCheckoutSerializer(serializers.ModelSerializer):
         request = self.context.get("request")
         new_order = Order( total=total, tax=tax, address=address, user=request.user )
         new_order.save()
-        
+
         for item in items:
             product = item['product']
             qty = item['qty']
             if (product.stock - qty) >= 0:
                 new_item = OrderItem(order=new_order, qty=qty, product=product )
                 new_item.save()
-            
-        return validated_data  
+
+        return validated_data
 
 
 '''
