@@ -57,23 +57,7 @@ Order Item Serializer
 """
 
 
-class OrderItemListSerializer(serializers.ModelSerializer):
-    product = serializers.PrimaryKeyRelatedField(read_only=True)
-    name = serializers.SerializerMethodField()
-    featured_image = serializers.SerializerMethodField()
-
-    class Meta:
-        model = OrderItem
-        fields = ['product', 'name', 'featured_image']
-
-    def get_name(self, obj):
-        return obj.product.name
-
-    def get_featured_image(self, obj):
-        return obj.product.get_featured_image()
-
-
-class OrderItemDetailSerializer(serializers.ModelSerializer):
+class OrderItemSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
     is_available = serializers.SerializerMethodField()
     price = serializers.SerializerMethodField()
@@ -103,7 +87,7 @@ Order serializers
 
 
 class OrderListSerializer(serializers.ModelSerializer):
-    items = OrderItemListSerializer(many=True)
+    items = OrderItemSerializer(many=True)
 
     class Meta:
         model = Order
@@ -111,7 +95,7 @@ class OrderListSerializer(serializers.ModelSerializer):
 
 
 class OrderDetailsSerializer(serializers.ModelSerializer):
-    items = OrderItemDetailSerializer(many=True)
+    items = OrderItemSerializer(many=True)
 
     class Meta:
         model = Order

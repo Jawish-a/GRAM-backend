@@ -47,6 +47,7 @@ class OrderListView(ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
+        print(user)
         return user.orders.all()
 
 

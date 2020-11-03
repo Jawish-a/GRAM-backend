@@ -8,7 +8,7 @@ urlpatterns = [
 
     path('products/', views.ProductListView.as_view(), name='product-list'),
     path('products/<int:object_id>/',
-         views.ProductDetailView.as_view(), name='product-detail'),
+         views.ProductListView.as_view(), name='product-detail'),
 
     path('orders/', views.OrderListView.as_view(), name='order-list'),
     path('orders/<int:object_id>/',
