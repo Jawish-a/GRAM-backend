@@ -4,10 +4,10 @@ from django.contrib.auth.models import User
 # this is to genrate the token after the user signup
 from rest_framework_simplejwt.tokens import RefreshToken
 
+
 '''
 Product serializers
 '''
-
 
 class ProductListSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
@@ -26,17 +26,6 @@ class ProductListSerializer(serializers.ModelSerializer):
         return image
 
 
-class ProductDetailsSerializer(serializers.ModelSerializer):
-    images = serializers.SlugRelatedField(
-        many=True,
-        read_only=True,
-        slug_field='url'
-    )
-
-    class Meta:
-        model = Product
-        fields = ['name', 'price', 'images', 'description', 'stock']
-
 
 '''
 Auth serializers
@@ -54,18 +43,12 @@ class SignUpSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         # creates the user with all its details
-        username = validated_data['username']
-        password = validated_data['password']
-        email = validated_data['email']
-        first_name = validated_data['first_name']
-        last_name = validated_data['last_name']
-        new_user = User(username=username, email=email,
-                        first_name=first_name, last_name=last_name)
-        new_user.set_password(password)
+        new_user = User(**validated_data)
+        new_user.set_password(validated_data['password'])
         new_user.save()
         # generate the token for the user so that he can login
         token = RefreshToken.for_user(new_user)
-        validated_data["token"] = token
+        validated_data["token"] = str(token.access_token)
         return validated_data
 
 
@@ -99,7 +82,7 @@ class OrderItemDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderItem
         fields = ['product_id', 'name', 'featured_image', 'is_available',
-                  'featured_image', 'price', 'qty', 'line_item_total']
+        'price', 'qty', 'line_item_total']
 
     def get_name(self, obj):
         return obj.product.name
@@ -111,6 +94,7 @@ class OrderItemDetailSerializer(serializers.ModelSerializer):
         return (obj.product.price)
 
     def get_featured_image(self, obj):
+        # Use model method
         return obj.product.images.filter(is_featured=True).first().url
 
 

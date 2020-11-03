@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from .serializers import (
     SignUpSerializer,
     AddressListSerializer, AddAddressSerializer, CountrySerializer,
-    ProductListSerializer, ProductDetailsSerializer,
+    ProductListSerializer,
     OrderDetailsSerializer, OrderListSerializer,
     OrderCheckoutSerializer
 )
@@ -18,6 +18,7 @@ from rest_framework.generics import (
     RetrieveUpdateAPIView
 )
 from .models import Product, Address, Country, Order
+
 
 """
 Auth Views
@@ -36,13 +37,6 @@ class ProductListView(ListAPIView):
     serializer_class = ProductListSerializer
 
 
-class ProductDetailView(RetrieveAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductDetailsSerializer
-    lookup_field = 'id'
-    lookup_url_kwarg = 'object_id'
-
-
 """ 
 Order Views
 """
@@ -51,6 +45,9 @@ class OrderListView(ListAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderListSerializer
     permission_classes = [IsAuthenticated]
+
+    # get orders for logged in user only
+    # get_queryset
 
 
 class OrderDetailView(RetrieveAPIView):
