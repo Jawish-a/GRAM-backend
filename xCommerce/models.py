@@ -36,7 +36,7 @@ class Address(models.Model):
     address_type = models.CharField(max_length=60)
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='addresses')
-    counrty = models.ForeignKey(Country, on_delete=models.CASCADE)
+    country = models.ForeignKey(Country, on_delete=models.CASCADE)
 
 
     def __str__(self):
