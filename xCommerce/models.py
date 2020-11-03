@@ -55,6 +55,10 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def get_featured_image(self):
+        image = self.images.filter(is_featured=True).first().url
+        return image
 
 
 class Image(models.Model):
