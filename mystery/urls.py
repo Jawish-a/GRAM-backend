@@ -32,6 +32,7 @@ urlpatterns = [
     path('api/v1/orders/', views.OrderListView.as_view(), name='order-list'),
     path('api/v1/orders/<int:object_id>/',
          views.OrderDetailView.as_view(), name='order-detail'),
+    path('api/v1/order/checkout/', views.OrderCheckout.as_view(), name='order-checkout'),
 
     path('api/v1/country/list/', views.CountryList.as_view(), name='country-list'),
 

@@ -75,7 +75,7 @@ Models for Order
 
 
 class Order(models.Model):
-    uuid = models.CharField(max_length=191)
+    uuid = models.UUIDField(default=uuid.uuid4)
     # Increase max digits to match or exceed product decimal field
     # Recommendation: Switch DecimalField to FloatField
     total = models.DecimalField(decimal_places=2, max_digits=12)
@@ -104,4 +104,7 @@ class OrderItem(models.Model):
 
 @receiver(pre_save, sender=OrderItem)
 def generate_line_item_total(instance, *args, **kwargs):
+    product = instance.product
     instance.line_item_total = (instance.product.price * instance.qty)
+    product.stock = product.stock - instance.qty
+    product.save()

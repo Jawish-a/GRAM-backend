@@ -11,10 +11,15 @@ Product serializers
 
 class ProductListSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
+    images = serializers.SlugRelatedField(
+        many=True,
+        read_only=True,
+        slug_field='url'
+        )
 
     class Meta:
         model = Product
-        fields = ['name', 'price', 'image']
+        fields = ['name', 'price', 'image', 'images', 'id','description' , 'stock']
 
     def get_image(self, obj):
         image = obj.images.filter(is_featured=True).first().url
@@ -152,24 +157,29 @@ class OrderCheckoutSerializer(serializers.ModelSerializer):
         fields = ['id', 'total', 'tax', 'address', 'items']
     
     def create(self, validated_data):
-            total = validated_data['total']
-            tax = validated_data['tax']
-            address = validated_data['address']
-            request = self.context.get("request")
-            new_order = Order( total=total, tax=tax, address=address, user=request.user )
-            new_order.save()
-            
-            items = validated_data['items']
-            for item in items:
-                product = item['product']
-                qty = item['qty']
-                # subtotal = 50
-                # subtotal = item['subtotal']
-                subtotal = float(product.price * qty)
-                new_item = OrderItem(order=new_order, subtotal=subtotal, qty=qty, product=product )
+        items = validated_data['items']
+        # Check for out of stock items
+        for item in items:
+            product = item['product']
+            qty = item['qty']
+            if (product.stock - qty) < 0:
+                raise serializers.ValidationError("Some items out of stock")
+
+        total = validated_data['total']
+        tax = validated_data['tax']
+        address = validated_data['address']
+        request = self.context.get("request")
+        new_order = Order( total=total, tax=tax, address=address, user=request.user )
+        new_order.save()
+        
+        for item in items:
+            product = item['product']
+            qty = item['qty']
+            if (product.stock - qty) >= 0:
+                new_item = OrderItem(order=new_order, qty=qty, product=product )
                 new_item.save()
             
-            return validated_data
+        return validated_data  
 
 
 '''
