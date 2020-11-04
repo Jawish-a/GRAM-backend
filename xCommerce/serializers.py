@@ -53,6 +53,37 @@ class SignUpSerializer(serializers.ModelSerializer):
         return validated_data
 
 
+'''
+Address serializers
+'''
+
+
+class CountrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Country
+        fields = ['name']
+
+
+class AddressListSerializer(serializers.ModelSerializer):
+    country = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Address
+        fields = ['id', 'first_name', 'last_name', 'phone', 'city',
+                  'address_line_1', 'address_line_2', 'address_type', 'country']
+        # exclude = ['user']
+
+    def get_country(self, obj):
+        return obj.country.name
+
+
+class AddAddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Address
+        exclude = ['user']
+
+
+
 """
 Order Item Serializer
 """
@@ -89,24 +120,12 @@ Order serializers
 
 class OrderListSerializer(serializers.ModelSerializer):
     items = OrderItemSerializer(many=True)
+    address = AddressListSerializer()
 
     class Meta:
         model = Order
         fields = ['id', 'uuid', 'total',
                   'created_date', 'tax', 'address', 'items']
-
-
-class OrderDetailsSerializer(serializers.ModelSerializer):
-    items = OrderItemSerializer(many=True)
-
-    class Meta:
-        model = Order
-        fields = ['id', 'uuid', 'total',
-                  'created_date', 'tax', 'address', 'items']
-
-    def get_items(self, obj):
-        items = obj.items.all()
-        return items
 
 
 '''
@@ -153,32 +172,3 @@ class OrderCheckoutSerializer(serializers.ModelSerializer):
 
         return validated_data
 
-
-'''
-Address serializers
-'''
-
-
-class CountrySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Country
-        fields = ['name']
-
-
-class AddressListSerializer(serializers.ModelSerializer):
-    country = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Address
-        fields = ['di', 'first_name', 'last_name', 'phone', 'city',
-                  'address_line_1', 'address_line_2', 'address_type', 'country']
-        # exclude = ['user']
-
-    def get_country(self, obj):
-        return obj.country.name
-
-
-class AddAddressSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Address
-        exclude = ['user']
