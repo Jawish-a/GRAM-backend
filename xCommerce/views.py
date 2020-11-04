@@ -4,8 +4,7 @@ from django.contrib.auth.models import User
 from .serializers import (
     SignUpSerializer,
     AddressListSerializer, AddAddressSerializer, CountrySerializer,
-    ProductListSerializer,
-    OrderDetailsSerializer, OrderListSerializer,
+    ProductListSerializer, OrderListSerializer,
     OrderCheckoutSerializer
 )
 
@@ -49,14 +48,6 @@ class OrderListView(ListAPIView):
         user = self.request.user
         print(user)
         return user.orders.all()
-
-
-class OrderDetailView(RetrieveAPIView):
-    queryset = Order.objects.all()
-    serializer_class = OrderDetailsSerializer
-    permission_classes = [IsAuthenticated, IsOwner]
-    lookup_field = 'id'
-    lookup_url_kwarg = 'object_id'
 
 
 class OrderCheckout(CreateAPIView):
