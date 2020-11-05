@@ -3,6 +3,25 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 # this is to genrate the token after the user signup
 from rest_framework_simplejwt.tokens import RefreshToken
+# customize token
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+
+'''
+Token serializer
+'''
+
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        token['username'] = user.username
+        token['email'] = user.email
+        token['first_name'] = user.first_name
+        token['last_name'] = user.last_name
+
+        return token
 
 
 '''
@@ -147,14 +166,7 @@ class OrderCheckoutSerializer(serializers.ModelSerializer):
         fields = ['id', 'total', 'tax', 'address', 'items']
 
     def create(self, validated_data):
-        items = validated_data['items']
-        # Check for out of stock items
-        for item in items:
-            product = item['product']
-            qty = item['qty']
-            if (product.stock - qty) < 0:
-                raise serializers.ValidationError("Some items out of stock")
-
+        # Create order instance
         total = validated_data['total']
         tax = validated_data['tax']
         address = validated_data['address']
@@ -163,12 +175,17 @@ class OrderCheckoutSerializer(serializers.ModelSerializer):
                           address=address, user=request.user)
         new_order.save()
 
+        # Create instance for each item in orderItem
+        items = validated_data['items']
         for item in items:
             product = item['product']
             qty = item['qty']
             if (product.stock - qty) >= 0:
                 new_item = OrderItem(order=new_order, qty=qty, product=product)
                 new_item.save()
+            else:
+                new_order.delete()
+                raise serializers.ValidationError("Some items out of stock")
 
         return validated_data
 

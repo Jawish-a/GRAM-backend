@@ -5,7 +5,7 @@ from .serializers import (
     SignUpSerializer,
     AddressListSerializer, AddAddressSerializer, CountrySerializer,
     ProductListSerializer, OrderListSerializer,
-    OrderCheckoutSerializer
+    OrderCheckoutSerializer, MyTokenObtainPairSerializer
 )
 
 
@@ -17,6 +17,8 @@ from rest_framework.generics import (
     RetrieveUpdateAPIView
 )
 from .models import Product, Address, Country, Order
+from rest_framework_simplejwt.views import TokenObtainPairView
+
 
 
 """
@@ -25,6 +27,10 @@ Auth Views
 
 class SignUp(CreateAPIView):
     serializer_class = SignUpSerializer
+
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
 
 
 """

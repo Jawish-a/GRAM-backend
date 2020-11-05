@@ -1,9 +1,8 @@
 from django.urls import path
 from xCommerce import views
-from rest_framework_simplejwt.views import TokenObtainPairView
 
 urlpatterns = [
-    path('login/', TokenObtainPairView.as_view(), name='login'),
+    path('login/', views.MyTokenObtainPairView.as_view(), name='login'),
     path('signup/', views.SignUp.as_view(), name='signup'),
 
     path('products/', views.ProductListView.as_view(), name='product-list'),
