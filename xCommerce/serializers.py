@@ -80,7 +80,7 @@ Address serializers
 class CountrySerializer(serializers.ModelSerializer):
     class Meta:
         model = Country
-        fields = ['name']
+        fields = ['id', 'name']
 
 
 class AddressListSerializer(serializers.ModelSerializer):
