@@ -81,7 +81,7 @@ class Order(models.Model):
     # Recommendation: Switch DecimalField to FloatField
     total = models.DecimalField(decimal_places=2, max_digits=12)
     created_date = models.DateTimeField(auto_now_add=True)
-    tax = models.DecimalField(decimal_places=2, max_digits=5)
+    tax = models.DecimalField(decimal_places=2, max_digits=12)
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='orders')
     address = models.ForeignKey(Address, on_delete=models.DO_NOTHING)
